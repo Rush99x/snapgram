@@ -61,7 +61,7 @@ export async function saveUserToDB(user: {
 // ============================== SIGN IN
 export async function signInAccount(user: { email: string; password: string }) {
   try {
-    const session = await account.createSession(user.email, user.password);
+    const session = await account.createEmailPasswordSession(user.email, user.password);
 
     return session;
   } catch (error) {
@@ -103,15 +103,33 @@ export async function getCurrentUser() {
 }
 
 // ============================== SIGN OUT
+// export async function signOutAccount() {
+//   try {
+//     const session = await account.deleteSession("current");
+
+//     return session;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
 export async function signOutAccount() {
   try {
-    const session = await account.deleteSession("current");
-
-    return session;
+    // Delete the current session to log out the user
+    await account.deleteSession("current");
+    
+    // You can return a success message or simply return true
+    return { success: true, message: "Logged out successfully." };
   } catch (error) {
-    console.log(error);
+    // Log the error for debugging purposes
+    console.error("Error while logging out:", error);
+    
+    // You might want to return an error message or false to indicate failure
+    return { success: false, message: "Failed to log out.", error };
   }
 }
+
+
 
 // ============================================================
 // POSTS
